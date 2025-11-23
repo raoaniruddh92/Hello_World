@@ -43,11 +43,24 @@ function App() {
   const [contractAddress, setContractAddress] = useState(null);
   const [returnValue, setReturnValue] = useState(null);
 
-  const connect = async () => {
+const connect = async () => {
     const wallets = await onboard.connectWallet();
-    if (wallets[0]) setWallet(wallets[0]);
-  };
+    
+    if (wallets[0]) {
+      setWallet(wallets[0]);
+      
+      // *** ADD THIS PART ***
+      try {
+        // Sepolia chain ID is 11155111, which should be converted to hex string for setChain
+        const SEPOLIA_CHAIN_ID_HEX = '0xaa36a7'; // 11155111 in hex
 
+        // Request the wallet to switch to the Sepolia chain
+        await onboard.setChain({ chainId: SEPOLIA_CHAIN_ID_HEX });
+      } catch (error) {
+        console.error("Failed to switch chain to Sepolia:", error);
+      }
+    }
+  };
   const handleDeploy = async () => {
     try {
       const address = await deploy_contract();
