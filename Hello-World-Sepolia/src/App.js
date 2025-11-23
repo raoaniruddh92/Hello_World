@@ -3,7 +3,8 @@ import './App.css';
 import Onboard from '@web3-onboard/core'
 import metamaskSDK from '@web3-onboard/metamask'
 import { useState, useEffect } from 'react'; // Import React hooks
-
+import { deploy_contract } from './Blockchain/Deploy';
+import { interact } from './Blockchain/Interact';
 // --- Configuration ---
 const INFURA_ID = 'e58130da3dee4d6c9f1ab1df59cbe8aa'
 
@@ -12,7 +13,6 @@ const chains = [
     id: 1,
     token: 'ETH',
     label: 'Ethereum Mainnet',
-    // FIX: Use template literal for INFURA_ID
     rpcUrl: `https://mainnet.infura.io/v3/${INFURA_ID}` 
   }
 ]
@@ -23,10 +23,6 @@ const metamaskSDKWallet = metamaskSDK({options: {
     name: 'Demo Web3Onboard'
   }
 }})
-
-// --- Web3-Onboard Initialization ---
-// The onboard instance should ideally be created outside the component or 
-// memoized, but for simplicity, we'll initialize it here and make it accessible.
 const onboard = Onboard({
   wallets: [
     metamaskSDKWallet,
@@ -49,6 +45,9 @@ const onboard = Onboard({
 
 
 function App() {
+  const [contractAddress, setContractAddress] = useState(null);
+  const [return_value, setreturn_value] = useState(null);
+
   const [wallet, setWallet] = useState(null); 
   const connect = async () => {
     const wallets = await onboard.connectWallet();
@@ -58,13 +57,26 @@ function App() {
     }
   };
 
-  const disconnect = async () => {
-    if (wallet) {
-      await onboard.disconnectWallet({ label: wallet.label });
-      setWallet(null);
-    }
-  };
-  
+const handleDeploy = async () => {
+  try {
+    const address = await deploy_contract();
+    setContractAddress(address); 
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+const handleinteract=async () => {
+  if (!contractAddress){
+    alert("contract is not deployed")
+  }
+  try {
+    const hello = await interact(contractAddress);
+    setreturn_value(hello); 
+  } catch (err) {
+    console.error(err);
+  }
+}
   useEffect(() => {
     const subscription = onboard.state.select('wallets').subscribe((wallets) => {
       if (wallets.length > 0) {
@@ -81,17 +93,26 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Web3-Onboard & MetaMask Demo</h1>
+        <h1>Hello World</h1>
         {wallet ? (
           <div>
             <p>Wallet Connected</p>
-            <p>Address: **{wallet.accounts[0].address.substring(0, 6)}...{wallet.accounts[0].address.substring(38)}**</p>
-            <p>Chain ID: **{wallet.chains[0].id}**</p>
-            <button onClick={disconnect}>Disconnect Wallet</button>
           </div>
         ) : (
           <button onClick={connect}>Connect Wallet</button>
         )}
+      <button onClick={handleDeploy}>Deploy Contract</button>
+      {contractAddress && (
+        <div>
+        <p>Deployed at: {contractAddress}</p>
+        <button onClick={handleinteract}>Hi</button>
+        {
+          return_value &&(
+          <p>Contract says {return_value}</p>
+          )
+        }
+        </div>
+      )}
       </header>
     </div>
   );
