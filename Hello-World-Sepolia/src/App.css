@@ -1,38 +1,94 @@
-.App {
+/* Root styling */
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background: #f5f7fa;
+  color: #333;
+}
+
+/* Center container */
+.app-container {
+  max-width: 540px;
+  margin: auto;
+  padding: 30px;
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* Header */
+.header h1 {
+  margin-bottom: 0;
+  font-size: 2.3rem;
+  font-weight: 700;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.subtitle {
+  color: #777;
+  margin-top: 5px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+/* Cards */
+.card {
+  background: #fff;
+  margin-top: 25px;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  text-align: center;
+}
+
+.card h2 {
+  margin-bottom: 15px;
+  font-size: 1.4rem;
+}
+
+/* Buttons */
+.primary-btn,
+.secondary-btn {
+  width: 100%;
+  padding: 14px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.primary-btn {
+  background: #4b8bff;
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.primary-btn:hover {
+  background: #3a74d9;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.secondary-btn {
+  background: #e6e9ef;
+}
+
+.secondary-btn:hover {
+  background: #d8dbe1;
+}
+
+/* Wallet Status */
+.wallet-status {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #2ecc71;
+}
+
+/* Contract Address */
+.contract-address span {
+  font-weight: 600;
+  color: #4b8bff;
+}
+
+/* Result Box */
+.task-box {
+  margin-top: 15px;
+  padding: 15px;
+  background: #f0f3f8;
+  border-radius: 8px;
 }
