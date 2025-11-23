@@ -10,10 +10,10 @@ const INFURA_ID = 'e58130da3dee4d6c9f1ab1df59cbe8aa';
 
 const chains = [
   {
-    id: 1,
+    id: 11155111,
     token: 'ETH',
-    label: 'Ethereum Mainnet',
-    rpcUrl: `https://mainnet.infura.io/v3/${INFURA_ID}`
+    label: 'Sepolia',
+    rpcUrl: `https://sepolia.infura.io/v3/${INFURA_ID}`
   }
 ];
 
