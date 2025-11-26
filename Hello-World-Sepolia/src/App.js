@@ -19,7 +19,7 @@ const chains = [
 
 const metamaskSDKWallet = metamaskSDK({
   options: {
-    extensionOnly: false,
+    extensionOnly: true,
     dappMetadata: { name: 'Demo Web3Onboard' }
   }
 });
@@ -35,7 +35,8 @@ const onboard = Onboard({
       { name: 'MetaMask', url: 'https://metamask.io' }
     ]
   },
-  connect: { autoConnectLastWallet: true }
+  connect: { autoConnectLastWallet: true },
+
 });
 
 function App() {
