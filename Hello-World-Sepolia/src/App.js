@@ -35,8 +35,13 @@ const onboard = Onboard({
       { name: 'MetaMask', url: 'https://metamask.io' }
     ]
   },
+  
   connect: { autoConnectLastWallet: true },
-
+  accountCenter: {
+      desktop: {
+        enabled: true,
+        position: 'topRight'
+      },}
 });
 
 function App() {
@@ -81,15 +86,34 @@ const connect = async () => {
       console.error(err);
     }
   };
+useEffect(() => {
+  // 1. Initial check
+  const initialWallets = onboard.state.get().wallets;
+  if (initialWallets.length > 0) {
+    setWallet(initialWallets[0]);
+  }
 
-  useEffect(() => {
-    const subscription = onboard.state.select('wallets').subscribe((wallets) => {
-      setWallet(wallets[0] || null);
-    });
+  // 2. Subscribe to the 'wallets' state slice
+  const wallets$ = onboard.state.select('wallets');
+  const subscription = wallets$.subscribe((newWallets) => { // Rename to subscription object
+    if (newWallets.length > 0) {
+      setWallet(newWallets[0]);
+    } else {
+      // Wallet has disconnected
+      setWallet(null);
+      setContractAddress(null);
+      setReturnValue(null);
+    }
+  });
 
-    return () => subscription.unsubscribe();
-  }, []);
-
+  // 3. Cleanup function to unsubscribe when the component unmounts
+  return () => {
+    // DEFENSIVE CHECK: Ensure the unsubscribe function exists before calling it.
+    if (typeof subscription.unsubscribe === 'function') {
+      subscription.unsubscribe();
+    }
+  };
+}, []);
   return (
     <div className="app-container">
       
@@ -97,23 +121,28 @@ const connect = async () => {
         <h1>Smart Contract Demo</h1>
         <p className="subtitle">Deploy & interact with a simple blockchain contract</p>
       </div>
+{!wallet ? (
+  <button className="primary-btn" onClick={connect}>
+    Connect Wallet
+  </button>
+) : (
+  <button className="primary-btn" disabled>
+    Wallet Connected
+  </button>
+)}
 
-      {!wallet ? (
-        <button className="primary-btn" onClick={connect}>
-          Connect Wallet
-        </button>
-      ) : (
-        <div className="card">
-          <p className="wallet-status">✔ Wallet Connected</p>
-        </div>
-      )}
 
       {/* Deploy Section */}
       <div className="card">
         <h2>Deploy Contract</h2>
-        <button className="primary-btn" onClick={handleDeploy}>
-          Deploy
-        </button>
+<button
+  className="primary-btn"
+  disabled={!wallet}
+  onClick={handleDeploy}
+>
+  {!wallet ? "Connect Wallet to Deploy" : "Deploy"}
+</button>
+
 
         {contractAddress && (
           <p className="contract-address">
