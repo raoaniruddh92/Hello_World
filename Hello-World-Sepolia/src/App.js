@@ -67,12 +67,40 @@ const connect = async () => {
       }
     }
   };
-  const handleDeploy = async () => {
+const handleDeploy = async () => {
+    // 1. Show PENDING notification immediately
+    const { update, dismiss } = onboard.state.actions.customNotification({
+      type: 'pending',
+      message: 'Contract deployment is in progress...',
+      // Set autoDismiss to 0 (or a very high number) so the user sees it until updated
+      autoDismiss: 0 
+    });
+
     try {
+      // This part runs the actual deployment
       const address = await deploy_contract();
       setContractAddress(address);
+      
+      // 2. Update to SUCCESS notification on completion
+      update({
+        eventCode: 'deploySuccess',
+        message: `Contract successfully deployed! Address: ${address.substring(0, 6)}...`,
+        type: 'success',
+        // Dismiss after 5 seconds
+        autoDismiss: 5000 
+      });
+
     } catch (err) {
       console.error(err);
+      
+      // 3. Update to ERROR notification on failure
+      update({
+        eventCode: 'deployFailure',
+        message: 'Failed to deploy contract. Check console for details.',
+        type: 'error',
+        // Dismiss after 8 seconds
+        autoDismiss: 8000
+      });
     }
   };
 
