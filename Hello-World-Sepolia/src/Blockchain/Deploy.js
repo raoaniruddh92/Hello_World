@@ -111,9 +111,10 @@ export async function deploy_contract() {
     console.log("✅ Contract deployed successfully!");
     const address = await contract.getAddress();
     console.log("Contract Address:", address);
-    
+    console.log(deploymentReceipt);
     const tx = contract.deploymentTransaction();
-    
+        console.log(tx);
+
     const encodedConstructorArgs = ""; 
     
     await verify_contract(address, encodedConstructorArgs);

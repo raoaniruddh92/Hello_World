@@ -1,6 +1,5 @@
 import { abi } from "./Abi";
-import { bytecode } from "./bytecode";
-import { BrowserProvider, ContractFactory } from "ethers";
+import { BrowserProvider } from "ethers";
 const { ethers } = require("ethers");
 
 export async function  interact(address){
