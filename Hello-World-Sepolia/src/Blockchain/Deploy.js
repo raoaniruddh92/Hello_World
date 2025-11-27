@@ -47,16 +47,17 @@ async function verify_contract(contractAddress, encodedConstructorArgs) {
     });
     
     // Define all parameters for the POST request body
-    const params = {
+const params = {
         apikey: ETHERSCAN_API_KEY,
         // MUST be a parameter in the body (Sepolia: 11155111)
         module: 'contract',
-        action: 'verifysinglefile', // Appropriate action for simple contract
+        // 💡 CHANGE THIS LINE
+        action: 'verifysourcecode', // <--- Use this for Standard JSON Input
         contractaddress: contractAddress,
-        sourceCode: sourceCodeJSON, // The complex data goes here
+        sourceCode: sourceCodeJSON, // This format requires 'verifysourcecode'
         contractname: 'hello.sol:hello', 
         compilerversion: COMPILER_VERSION,
-        constructorArguments: encodedConstructorArgs // Correct parameter name
+        constructorArguments: encodedConstructorArgs 
     };
 
     // Encode parameters into URLSearchParams for POST body
